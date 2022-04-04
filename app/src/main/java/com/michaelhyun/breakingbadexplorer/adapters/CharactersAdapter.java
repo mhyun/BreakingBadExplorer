@@ -41,6 +41,11 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.My
         notifyDataSetChanged();
     }
 
+    public void filterList(List<Character> characterList) {
+        this.characterList = characterList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public CharactersAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

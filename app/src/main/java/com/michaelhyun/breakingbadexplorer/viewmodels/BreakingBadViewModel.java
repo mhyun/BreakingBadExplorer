@@ -18,7 +18,6 @@ import retrofit2.Response;
 
 public class BreakingBadViewModel extends ViewModel {
 
-    private BreakingBadRepo breakingBadRepo;
     private MutableLiveData<List<Character>> characters;
 
     public BreakingBadViewModel() {
