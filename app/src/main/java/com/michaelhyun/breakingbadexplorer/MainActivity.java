@@ -1,45 +1,28 @@
 package com.michaelhyun.breakingbadexplorer;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.michaelhyun.breakingbadexplorer.adapters.CharactersAdapter;
 import com.michaelhyun.breakingbadexplorer.model.Character;
-import com.michaelhyun.breakingbadexplorer.repositories.BreakingBadService;
-import com.michaelhyun.breakingbadexplorer.repositories.BreakingBadRepo;
 import com.michaelhyun.breakingbadexplorer.viewmodels.BreakingBadViewModel;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Spliterator;
-import java.util.function.UnaryOperator;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class MainActivity extends AppCompatActivity implements CharactersAdapter.ItemClickListener{
+public class MainActivity extends AppCompatActivity implements CharactersAdapter.ItemClickListener, SeasonDialog.SeasonDialogListener {
 
     private BreakingBadViewModel breakingBadViewModel;
     private List<Character> characterList;
@@ -47,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements CharactersAdapter
     TextView noText;
     SearchView searchView;
     CharactersAdapter charactersAdapter;
+    ImageButton filterSeasonButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements CharactersAdapter
         recyclerView = findViewById(R.id.rv_characters);
         noText = findViewById(R.id.tv_noText);
         searchView = findViewById(R.id.sv_search);
+        filterSeasonButton = findViewById(R.id.btn_filter);
         LinearLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
         charactersAdapter = new CharactersAdapter(this, characterList, this);
@@ -86,13 +71,20 @@ public class MainActivity extends AppCompatActivity implements CharactersAdapter
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filter(newText);
+                search(newText);
                 return false;
+            }
+        });
+
+        filterSeasonButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialog();
             }
         });
     }
 
-    private void filter(String text) {
+    private void search(String text) {
         List<Character> filteredList = new ArrayList<>();
         for (Character item : characterList) {
             if (item.getName().toLowerCase().contains(text.toLowerCase())) {
@@ -106,7 +98,34 @@ public class MainActivity extends AppCompatActivity implements CharactersAdapter
         }
     }
 
+    public void openDialog() {
+        SeasonDialog seasonDialog = new SeasonDialog();
+        seasonDialog.show(getSupportFragmentManager(), "Season Dialog");
+    }
+
     @Override
     public void onCharacterClick(Character character) {
+    }
+
+    @Override
+    public void applyFilter(List<Integer> seasonsList) {
+        List<Character> filteredList = new ArrayList<>();
+        Boolean toAdd = true;
+        for (Character item : characterList) {
+            for(int i = 0; i < seasonsList.size(); i++) {
+                if(!item.getAppearance().contains(seasonsList.get(i))){
+                    toAdd = false;
+                }
+            }
+            if(toAdd == true) {
+                filteredList.add(item);
+            }
+            toAdd = true;
+        }
+        if (filteredList.isEmpty()) {
+            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show();
+        } else {
+            charactersAdapter.filterList(filteredList);
+        }
     }
 }

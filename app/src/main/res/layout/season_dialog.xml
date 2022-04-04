@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <CheckBox
+        android:id="@+id/cb_season1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Season 1"/>
+
+    <CheckBox
+        android:id="@+id/cb_season2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cb_season1"
+        android:text="Season 2" />
+
+    <CheckBox
+        android:id="@+id/cb_season3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cb_season2"
+        android:text="Season 3" />
+
+    <CheckBox
+        android:id="@+id/cb_season4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cb_season3"
+        android:text="Season 4" />
+
+    <CheckBox
+        android:id="@+id/cb_season5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cb_season4"
+        android:text="Season 5" />
+</RelativeLayout>
